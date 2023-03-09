@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 require dirname(__DIR__) . "/vendor/autoload.php";
-
+set_error_handler("ErrorHandler::handleError");
 set_exception_handler("ErrorHandler::handleException");
 
 $path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
