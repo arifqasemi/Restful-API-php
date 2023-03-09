@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-require dirname(__DIR__) . "/vendor/autoload.php";
-set_error_handler("ErrorHandler::handleError");
-set_exception_handler("ErrorHandler::handleException");
+require dirname(__DIR__) . "/api/bootstrap.php";
+
 
 $path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 
@@ -20,12 +19,20 @@ if ($resource != "task") {
     exit;
 }
 
-header("Content-type: application/json; charset=UTF-8");
+
 
 $database = new Database("localhost", "restful_api", "root", "");
+
+
+$user_gateway = new UserGateway($database);
+
+// $auth = new Auth($user_gateway);
+// if(!$auth->authenticationApiKey()){
+//     exit;
+// }
+
 $task_gateway = new TaskGateway($database);
 
-// $database->getConnection();
 
 $controller = new TaskController($task_gateway);
 
