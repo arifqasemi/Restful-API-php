@@ -27,12 +27,16 @@ $database = new Database("localhost", "restful_api", "root", "");
 $user_gateway = new UserGateway($database);
 
 $auth = new Auth($user_gateway);
-if(!$auth->authenticationApiKey()){
+
+if ( ! $auth->authenticateAccessToken()) {
     exit;
 }
 
+echo "valid authentication";
+exit;
+
 $user_id = $auth->getUserId();
-print_r($user_id);
+// print_r($user_id);
 $task_gateway = new TaskGateway($database);
 
 $controller = new TaskController($task_gateway,$user_id);
