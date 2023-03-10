@@ -9,35 +9,42 @@ class TaskGateway
         $this->conn = $database->getConnection();
     }
     
-    public function getAll(): array
+    public function getAllForUser($id): array
     {
         $sql = "SELECT *
-                FROM task
+                FROM task where id =:id
                 ORDER BY name";
                 
-        $stmt = $this->conn->query($sql);
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         
+        $stmt->execute();
+                
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
-    public function get(string $id): array | false
+    public function get(int $user_id): array | false
     {
         $sql = "SELECT *
                 FROM task
-                WHERE id = :id";
+                WHERE user_id = :user_id";
                 
         $stmt = $this->conn->prepare($sql);
         
-        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
-        
+        $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
+
         $stmt->execute();
         
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        if ($data !== false) {
+        $data = [];
+        
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             
-            $data['is_completed'] = (bool) $data['is_completed'];
+            $row['is_completed'] = (bool) $row['is_completed'];
+            
+            $data[] = $row;
         }
         
         return $data;
@@ -47,10 +54,10 @@ class TaskGateway
 
 
        
-    public function create(array $data): string
+    public function create(int $user_id,array $data): string
     {
-        $sql = "INSERT INTO task (name, priority, is_completed)
-                VALUES (:name, :priority, :is_completed)";
+        $sql = "INSERT INTO task (name, priority, is_completed,user_id)
+                VALUES (:name, :priority, :is_completed,:user_id)";
                 
         $stmt = $this->conn->prepare($sql);
         
@@ -68,6 +75,7 @@ class TaskGateway
         
         $stmt->bindValue(":is_completed", $data["is_completed"] ?? false,
                          PDO::PARAM_BOOL);
+        $stmt->bindValue(":user_id", $user_id);
                          
         $stmt->execute();
         
@@ -99,10 +107,17 @@ class TaskGateway
             
             $fields["is_completed"] = [
                 $data["is_completed"],
-                PDO::PARAM_BOOL
+                PDO::PARAM_INT
             ];
         }         
-
+        
+        if ( ! empty($data["user_id"])) {
+            
+            $fields["user_id"] = [
+                $data["user_id"],
+                PDO::PARAM_STR
+            ];
+        } 
 
         
         if (empty($fields)) {
@@ -140,15 +155,16 @@ class TaskGateway
     }
 
 
-    public function delete(string $id): int
+    public function delete($user_id,string $id): int
     {
         $sql = "DELETE FROM task
-                WHERE id = :id";
+                WHERE id = :id && user_id = :user_id";
                 
         $stmt = $this->conn->prepare($sql);
         
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
-        
+        $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
+
         $stmt->execute();
         
         return $stmt->rowCount();
