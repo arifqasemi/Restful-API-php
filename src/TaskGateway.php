@@ -9,14 +9,14 @@ class TaskGateway
         $this->conn = $database->getConnection();
     }
     
-    public function getAllForUser($id): array
+    public function getAllForUser($user_id): array
     {
         $sql = "SELECT *
-                FROM task where id =:id
+                FROM task where user_id =:user_id
                 ORDER BY name";
                 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+        $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);
         
         $stmt->execute();
                 

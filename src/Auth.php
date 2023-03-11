@@ -57,7 +57,8 @@ class Auth{
             echo json_encode(["message" => "invalid JSON"]);
             return false;
         }
-        
+        $this->user_id = $data['id'];
+
         return true;
     }
 }

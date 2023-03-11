@@ -26,16 +26,26 @@ $database = new Database("localhost", "restful_api", "root", "");
 
 $user_gateway = new UserGateway($database);
 
+// $headers = apache_request_headers();
+// echo $headers["Authorization"];
+// var_dump($_SERVER['HTTP_AUTHORIZATION']);
+// echo $headers;
 $auth = new Auth($user_gateway);
+
+// $auth->authenticateAccessToken();
+// exit;
+
+
 
 if ( ! $auth->authenticateAccessToken()) {
     exit;
 }
 
-echo "valid authentication";
-exit;
+// echo "valid authentication";
+// exit;
 
 $user_id = $auth->getUserId();
+// $user_id=5;
 // print_r($user_id);
 $task_gateway = new TaskGateway($database);
 
