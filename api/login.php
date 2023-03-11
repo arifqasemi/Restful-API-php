@@ -43,7 +43,12 @@ $payload = [
     "name" => $user["name"]
 ];
 
-$access_token = base64_encode(json_encode($payload));
+$secret_key ="5A7134743777217A25432646294A404E635266556A586E3272357538782F413F";
+$codec = new JWTCodec($secret_key);
+
+
+
+$access_token = $codec->encode($payload);
 
 echo json_encode([
     "access_token" => $access_token

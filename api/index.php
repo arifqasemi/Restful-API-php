@@ -30,7 +30,11 @@ $user_gateway = new UserGateway($database);
 // echo $headers["Authorization"];
 // var_dump($_SERVER['HTTP_AUTHORIZATION']);
 // echo $headers;
-$auth = new Auth($user_gateway);
+
+$secret_key ="5A7134743777217A25432646294A404E635266556A586E3272357538782F413F";
+
+$codec = new JWTCodec($secret_key);
+$auth = new Auth($user_gateway,$codec);
 
 // $auth->authenticateAccessToken();
 // exit;
@@ -46,7 +50,7 @@ if ( ! $auth->authenticateAccessToken()) {
 
 $user_id = $auth->getUserId();
 // $user_id=5;
-// print_r($user_id);
+print_r($user_id);
 $task_gateway = new TaskGateway($database);
 
 $controller = new TaskController($task_gateway,$user_id);
