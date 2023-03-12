@@ -37,19 +37,10 @@ if ( ! password_verify($data["password"], $user["password_hash"])) {
     echo json_encode(["message" => "invalid authentication"]);
     exit;
 }
-
-$payload = [
-    "id" => $user["id"],
-    "name" => $user["name"]
-];
-
 $secret_key ="5A7134743777217A25432646294A404E635266556A586E3272357538782F413F";
-$codec = new JWTCodec($secret_key);
+$expiry =432000;
+require __DIR__ . "/tokens.php";
 
+$refresh_token_gateway = new RefreshTokenGateway($database,$secret_key);
+$refresh_token_gateway->create($refresh_token,$expiry);
 
-
-$access_token = $codec->encode($payload);
-
-echo json_encode([
-    "access_token" => $access_token
-]);
