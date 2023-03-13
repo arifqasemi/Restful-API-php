@@ -3,7 +3,7 @@
 $payload = [
     "id" => $user["id"],
     "name" => $user["name"],
-    "exp"=> time() + 50
+    "exp"=> time() + 4000
 ];
 
 $codec = new JWTCodec($secret_key);

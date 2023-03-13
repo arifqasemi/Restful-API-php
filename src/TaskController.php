@@ -45,7 +45,18 @@ class TaskController {
                     echo json_encode($this->gateway->get($this->user_id,$id));
                     break;
                 case "POST":
-                     json_decode(file_get_contents("php://input"),true);
+                    $data = (array) json_decode(file_get_contents("php://input"), true);
+                    // $errors = $this->getValidationErrors($data);
+                        
+                    // if ( ! empty($errors)) {
+                        
+                    //     $this->respondUnprocessableEntity($errors);
+                    //     return;
+                        
+                    // }
+                    $id = $this->gateway->create($this->user_id,$data);
+                    
+                    $this->respondCreated($id);
                     break;
 
                 case "PATCH":

@@ -45,12 +45,12 @@ if ( ! $auth->authenticateAccessToken()) {
     exit;
 }
 
-// echo "valid authentication";
-// exit;
+// // echo "valid authentication";
+// // exit;
 
 $user_id = $auth->getUserId();
 // $user_id=5;
-print_r($user_id);
+// print_r($user_id);
 $task_gateway = new TaskGateway($database);
 
 $controller = new TaskController($task_gateway,$user_id);

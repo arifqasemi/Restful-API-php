@@ -25,6 +25,40 @@ class RefreshTokenGateway
         
         return $stmt->execute();
     }
+
+
+    public function delete(string $token): int
+    {
+        $hash = hash_hmac("sha256", $token, $this->key);
+        
+        $sql = "DELETE FROM refresh_tokens
+                WHERE token_hash = :token_hash";
+                
+        $stmt = $this->conn->prepare($sql);
+        
+        $stmt->bindValue(":token_hash", $hash, PDO::PARAM_STR);
+        
+        $stmt->execute();
+        // echo $hash;
+        return $stmt->rowCount();
+    }
+
+    public function getByToken(string $token): array | false
+    {
+        $hash = hash_hmac("sha256", $token, $this->key);
+        
+        $sql = "SELECT *
+                FROM refresh_tokens
+                WHERE token_hash = :token_hash";
+                
+        $stmt = $this->conn->prepare($sql);
+        
+        $stmt->bindValue(":token_hash", $hash, PDO::PARAM_STR);
+        
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
 
 
