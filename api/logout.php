@@ -19,8 +19,10 @@ if ( ! array_key_exists("token", $data)) {
     echo json_encode(["message" => "missing token"]);
     exit;
 }
+$secret_key ="5A7134743777217A25432646294A404E635266556A586E3272357538782F413F";
 
-$codec = new JWTCodec($_ENV["SECRET_KEY"]);
+
+$codec = new JWTCodec($secret_key);
 
 try {
     $payload = $codec->decode($data["token"]);

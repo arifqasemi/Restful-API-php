@@ -13,7 +13,7 @@ class TaskGateway
     {
         $sql = "SELECT *
                 FROM task where user_id =:user_id
-                ORDER BY name";
+                ORDER BY id desc";
                 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":user_id", $user_id, PDO::PARAM_INT);

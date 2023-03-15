@@ -26,11 +26,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     $stmt->execute();
     
-    echo "Thank you for registering. Your API key is ", $api_key;
+    echo "Thank you for registering. Your API key is ", $api_key ."<br>" ."<br>"."<a class='loginbtn' href='example-client.html' style='background:blue;padding:10px 12px;color:white; border-radius: 5px; '>Login</a>";
     exit;
 }
 
 ?>
+<style>
+    .loginbtn{
+        padding:20px;
+    }
+</style>
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,7 +68,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             
             <button>Register</button>
         </form>
-    
     </main>
     
 </body>
